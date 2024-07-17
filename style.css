@@ -35,10 +35,10 @@ body {
   padding: 10px 20px;
   font-size: 20px;
   border-radius: 20px;
-  border: 1px solid black;
+  border: 1px solid #212529;
   box-shadow: 0 0 20px black;
   color: white;
-  background: transparent;
+  background: #212529;
   transition: all 0.3s ease;
 }
 
@@ -46,9 +46,9 @@ body {
   padding: 5px 20px;
   font-size: 16px;
   border-radius: 20px;
-  border: 1px solid black;
+  border: 1px solid #212529;
   color: white;
-  background: transparent;
+  background: #212529;
   transition: all 0.3s ease;
 }
 .container .wrapper button:active {

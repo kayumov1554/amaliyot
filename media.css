@@ -10,15 +10,16 @@
   }
   .container #buttons {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     width: 100%;
     padding: 20px 0;
   }
   .container #buttons button {
     font-size: 19px;
-    width: 70%;
+    width: auto;
   }
   #box #img {
     display: flex;
