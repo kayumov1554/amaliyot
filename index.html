@@ -11,30 +11,117 @@
       type="image/x-icon"
     />
     <link rel="stylesheet" href="media.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
   </head>
   <body>
     <div class="container">
-      <h1 id="title">Welcome To Picture Edit</h1>
+      <h1 id="title" class="wow animate__animated animate__bounce">
+        Welcome To Picture Edit
+      </h1>
       <div class="wrapper">
-        <button id="getStarted" onclick="getStarted()">Get Started</button>
+        <button
+          id="getStarted"
+          onclick="getStarted()"
+          class="wow animate__animated animate__flash"
+        >
+          Get Started
+        </button>
       </div>
       <div id="box">
         <div id="img">
           <img src="img/manzara.jpg" alt="" id="image" />
+          <img
+            src="img/manzara2.jpg"
+            alt=""
+            style="width: 300px; height: 200px"
+            id="img1"
+          />
+          <img
+            src="img/manzara3.jpg"
+            alt=""
+            style="width: 300px; height: 200px"
+            id="img2"
+          />
+          <img
+            src="img/manzara4.jpg"
+            alt=""
+            style="width: 300px; height: 200px"
+            id="img3"
+          />
         </div>
         <div id="buttons">
-          <button id="style1" onclick="style1()">Grayscale</button>
-          <button id="style2" onclick="style2()">contarst</button>
-          <button id="style3" onclick="style3()">blur</button>
-          <button id="radius1" onclick="radius1()">Border-radius 30px</button>
-          <button id="radius2" onclick="radius2()">Border-radius 50px</button>
-          <button id="radius3" onclick="radius3()">Border-radius 70px</button>
-          <button id="clear" onclick="filter()">Clear</button>
-          <button id="other" onclick="other()">Other-IMG</button>
+          <button
+            id="style1"
+            onclick="style1()"
+            class="wow animate__animated animate__"
+          >
+            Grayscale
+          </button>
+          <button
+            id="style2"
+            onclick="style2()"
+            class="wow animate__animated animate__flash"
+          >
+            contarst
+          </button>
+          <button
+            id="style3"
+            onclick="style3()"
+            class="wow animate__animated animate__flash"
+          >
+            blur
+          </button>
+          <button
+            id="radius1"
+            onclick="radius1()"
+            class="wow animate__animated animate__flash"
+          >
+            Radius 30px
+          </button>
+          <button
+            id="radius2"
+            onclick="radius2()"
+            class="wow animate__animated animate__flash"
+          >
+            Radius 50px
+          </button>
+          <button
+            id="radius3"
+            onclick="radius3()"
+            class="wow animate__animated animate__flash"
+          >
+            Radius 70px
+          </button>
+          <button
+            id="clear"
+            onclick="filter()"
+            class="wow animate__animated animate__flash"
+          >
+            Clear
+          </button>
+          <button
+            id="other"
+            onclick="other()"
+            class="wow animate__animated animate__flash"
+          >
+            Other-IMG
+          </button>
           <button id="add" onclick="add()">
             <span id="addimg">Save-IMG</span> <span id="text"></span>
           </button>
         </div>
+        <section class="images">
+          <div id="images">
+            <button id="btnimg" onclick="btnimg()">Image-1</button>
+            <button id="btnimg2" onclick="btnimg2()">Image-2</button>
+            <button id="btnimg3" onclick="btnimg3()">Image-3</button>
+            <button id="done" onclick="done()">Done</button>
+          </div>
+        </section>
       </div>
     </div>
     <script src="app.js"></script>
