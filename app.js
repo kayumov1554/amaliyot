@@ -11,6 +11,8 @@ bot.on('text', (ctx) => {
     item.uz.toLowerCase() === input || item.ko === input
   );
 
+  if (text === '/start') return
+
   if (match) {
     ctx.reply(`🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})`);
   } else {
