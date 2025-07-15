@@ -3,6 +3,9 @@ const dictionary = require('./dictionary'); // lug'at alohida faylda
 
 const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY');
 
+bot.start((ctx) => {
+  ctx.reply("Assalomu alaykum! 👋\nMenga O‘zbekcha yoki Koreyscha so‘z yuboring.\nMen sizga tarjimasini aytaman 🇺🇿 ↔️ 🇰🇷");
+});
 // Matn yuborilganda ishlaydi
 bot.on('text', (ctx) => {
   const input = ctx.message.text.trim().toLowerCase();
@@ -11,7 +14,6 @@ bot.on('text', (ctx) => {
     item.uz.toLowerCase() === input || item.ko === input
   );
 
-  if (text === '/start') return
 
   if (match) {
     ctx.reply(`🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})`);
