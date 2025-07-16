@@ -1,12 +1,17 @@
 const { Telegraf } = require('telegraf');
-const dictionary = require('./dictionary'); // lug'at alohida faylda
+const express = require('express');
+const dictionary = require('./dictionary');
 
-const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY');
+const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY'); // <-- Bot tokeningizni yozing
+const app = express();
+const PORT = 3000;
 
+// Telegram bot start komandasi
 bot.start((ctx) => {
-  ctx.reply("Assalomu alaykum! 👋\nMenga O‘zbekcha yoki Koreyscha so‘z yuboring.\nMen sizga tarjimasini aytaman 🇺🇿 ↔️ 🇰🇷");
+  ctx.reply("👋 Assalomu alaykum!\nMenga O‘zbekcha yoki Koreyscha so‘z yuboring.\nMen sizga tarjima va izohini chiqaraman.");
 });
-// Matn yuborilganda ishlaydi
+
+// Matn kelganda
 bot.on('text', (ctx) => {
   const input = ctx.message.text.trim().toLowerCase();
 
@@ -15,11 +20,22 @@ bot.on('text', (ctx) => {
   );
 
   if (match) {
-    ctx.reply(`🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})`);
+    const response = `🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})\nℹ️ ${match.expl}`;
+    ctx.reply(response);
   } else {
-    ctx.reply("Kechirasiz, bu so‘z uchun tarjima topilmadi.");
+    ctx.reply("❌ Kechirasiz, bu so‘z uchun tarjima topilmadi.");
   }
 });
 
+// Telegram botni ishga tushurish
 bot.launch();
-console.log("Bot ishga tushdi...");
+console.log('✅ Telegram bot ishga tushdi.');
+
+// Express serverni ishga tushurish
+app.get('/', (req, res) => {
+  res.send('🤖 Bot ishlayapti. Telegram orqali yozing.');
+});
+
+app.listen(PORT, () => {
+  console.log(`✅ Express server http://localhost:${PORT} da ishlayapti`);
+});
