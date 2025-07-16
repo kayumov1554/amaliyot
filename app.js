@@ -27,6 +27,20 @@ bot.on('text', (ctx) => {
   }
 });
 
+const alphabet = require('./alphabet');
+
+function findAlphabetInfo(input) {
+  const match = alphabet.find(item =>
+    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input
+  );
+
+  if (match) {
+    return `🇰🇷 ${match.ko}\n🇺🇿 ${match.uz} (${match.roman})\nℹ️ ${match.expl}`;
+  } else {
+    return "❌ Bu harf topilmadi.";
+  }
+}
+
 // Telegram botni ishga tushurish
 bot.launch();
 console.log('✅ Telegram bot ishga tushdi.');
