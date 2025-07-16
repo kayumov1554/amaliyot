@@ -1,6 +1,7 @@
 const { Telegraf } = require('telegraf');
 const express = require('express');
 const dictionary = require('./dictionary');
+const alphabet = require('./alphabet');
 
 const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY'); // <-- Bot tokeningizni yozing
 const app = express();
@@ -19,6 +20,11 @@ bot.on('text', (ctx) => {
     item.uz.toLowerCase() === input || item.ko === input
   );
 
+  function findAlphabetInfo(input) {
+  const match = alphabet.find(item =>
+    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input
+  );
+
   if (match) {
     const response = `🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})\nℹ️ ${match.expl}`;
     ctx.reply(response);
@@ -27,12 +33,8 @@ bot.on('text', (ctx) => {
   }
 });
 
-const alphabet = require('./alphabet');
 
-function findAlphabetInfo(input) {
-  const match = alphabet.find(item =>
-    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input
-  );
+
 
   if (match) {
     return `🇰🇷 ${match.ko}\n🇺🇿 ${match.uz} (${match.roman})\nℹ️ ${match.expl}`;
