@@ -1,0 +1,45 @@
+const alphabet = [
+  // Undoshlar (자음)
+  { uz: "g/k", ko: "ㄱ", roman: "g/k", expl: "Koreys tilida so‘z boshida 'k', so‘z o‘rtasida 'g' deb o‘qiladi." },
+  { uz: "kk", ko: "ㄲ", roman: "kk", expl: "Qattiq 'k' tovushi. To‘xtalib aytiladi." },
+  { uz: "n", ko: "ㄴ", roman: "n", expl: "'N' tovushi. O‘zbekchadagi 'n' kabi." },
+  { uz: "d/t", ko: "ㄷ", roman: "d/t", expl: "So‘z boshida 't', o‘rtasida 'd' tovushi." },
+  { uz: "tt", ko: "ㄸ", roman: "tt", expl: "Qattiq 't' tovushi." },
+  { uz: "r/l", ko: "ㄹ", roman: "r/l", expl: "O‘rtada 'r', so‘z oxirida 'l' kabi aytiladi." },
+  { uz: "m", ko: "ㅁ", roman: "m", expl: "'M' tovushi. O‘zbekchadagi 'm' kabi." },
+  { uz: "b/p", ko: "ㅂ", roman: "b/p", expl: "So‘z boshida 'p', o‘rtasida 'b' tovushi." },
+  { uz: "pp", ko: "ㅃ", roman: "pp", expl: "Qattiq 'p' tovushi." },
+  { uz: "s", ko: "ㅅ", roman: "s", expl: "'S' tovushi. O‘zbekchadagi 's' kabi." },
+  { uz: "ss", ko: "ㅆ", roman: "ss", expl: "Qattiq 's' tovushi." },
+  { uz: "ng", ko: "ㅇ", roman: "ng / -", expl: "So‘z boshida tovushsiz, oxirida 'ng' deb o‘qiladi." },
+  { uz: "j/ch", ko: "ㅈ", roman: "j/ch", expl: "So‘z boshida 'ch', o‘rtada 'j' kabi o‘qiladi." },
+  { uz: "jj", ko: "ㅉ", roman: "jj", expl: "Qattiq 'ch' tovushi." },
+  { uz: "ch", ko: "ㅊ", roman: "ch", expl: "'Ch' tovushi. O‘zbekchadagi kabi." },
+  { uz: "k", ko: "ㅋ", roman: "k", expl: "Portlovchi 'k' tovushi, yumshoq." },
+  { uz: "t", ko: "ㅌ", roman: "t", expl: "'T' tovushi, portlovchi." },
+  { uz: "p", ko: "ㅍ", roman: "p", expl: "'P' tovushi, portlovchi." },
+  { uz: "h", ko: "ㅎ", roman: "h", expl: "Xuddi o‘zbekchadagi 'h' tovushi." },
+
+  // Unlilar (모음)
+  { uz: "a", ko: "ㅏ", roman: "a", expl: "O‘zbekchadagi 'a' kabi (ochiq tovush)." },
+  { uz: "ya", ko: "ㅑ", roman: "ya", expl: "'A' tovushining yumshoq shakli." },
+  { uz: "eo", ko: "ㅓ", roman: "eo", expl: "O‘zbekchadagi 'o' va 'a' aralashmasi." },
+  { uz: "yeo", ko: "ㅕ", roman: "yeo", expl: "'Yo'ga o‘xshash, yumshoqroq." },
+  { uz: "o", ko: "ㅗ", roman: "o", expl: "O‘zbekchadagi 'o' tovushi." },
+  { uz: "yo", ko: "ㅛ", roman: "yo", expl: "'Yo' tovushi." },
+  { uz: "u", ko: "ㅜ", roman: "u", expl: "O‘zbekchadagi 'u' tovushi." },
+  { uz: "yu", ko: "ㅠ", roman: "yu", expl: "'Yu' tovushi." },
+  { uz: "eu", ko: "ㅡ", roman: "eu", expl: "Til orqasida aytiladigan 'u' tovushi." },
+  { uz: "i", ko: "ㅣ", roman: "i", expl: "O‘zbekchadagi 'i' tovushi." },
+  { uz: "ae", ko: "ㅐ", roman: "ae", expl: "'E' va 'a' aralashmasi." },
+  { uz: "yae", ko: "ㅒ", roman: "yae", expl: "'Ya' va 'e' aralashmasi." },
+  { uz: "e", ko: "ㅔ", roman: "e", expl: "Oddiy 'e' tovushi." },
+  { uz: "ye", ko: "ㅖ", roman: "ye", expl: "'Ye' tovushi." },
+  { uz: "wa", ko: "ㅘ", roman: "wa", expl: "'O' va 'a' birikmasi – wa." },
+  { uz: "wo", ko: "ㅝ", roman: "wo", expl: "'U' va 'o' aralashmasi – wo." },
+  { uz: "we", ko: "ㅞ", roman: "we", expl: "Ingliz tilidagi 'wet' so‘zidagi 'we' tovushiga o‘xshaydi." },
+  { uz: "wi", ko: "ㅟ", roman: "wi", expl: "'Wi' tovushi." },
+  { uz: "ui", ko: "ㅢ", roman: "ui", expl: "Til orqasida aytiladigan aralash tovush." }
+];
+
+module.exports = alphabet;
