@@ -3,50 +3,48 @@ const express = require('express');
 const dictionary = require('./dictionary');
 const alphabet = require('./alphabet');
 
-const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY'); // <-- Bot tokeningizni yozing
+const bot = new Telegraf('7512880109:AAFXlYoxQU3xPrt60w4vJCY4LzCLqhu5nRY'); // ⚠️ Tokeningizni bu yerga yozing
 const app = express();
 const PORT = 3000;
 
-// Telegram bot start komandasi
+// /start komandasi
 bot.start((ctx) => {
-  ctx.reply("👋 Assalomu alaykum!\nMenga O‘zbekcha yoki Koreyscha so‘z yuboring.\nMen sizga tarjima va izohini chiqaraman.");
+  ctx.reply("👋 Assalomu alaykum!\nMenga O‘zbekcha yoki Koreyscha so‘z yoki harf yuboring.\nMen sizga tarjima va izohini chiqaraman.");
 });
 
-// Matn kelganda
+// Matn kelganda — so‘z yoki harf qidirish
 bot.on('text', (ctx) => {
   const input = ctx.message.text.trim().toLowerCase();
 
-  const match = dictionary.find(item =>
+  // Avval so‘z (dictionary) dan qidiramiz
+  const matchWord = dictionary.find(item =>
     item.uz.toLowerCase() === input || item.ko === input
   );
 
-  function findAlphabetInfo(input) {
-  const match = alphabet.find(item =>
-    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input);
+  if (matchWord) {
+    const response = `🇺🇿 ${matchWord.uz}\n🇰🇷 ${matchWord.ko} (${matchWord.roman})\nℹ️ ${matchWord.expl}`;
+    ctx.reply(response);
+    return;
+  }
 
-  if (match) {
-    const response = `🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})\nℹ️ ${match.expl}`;
+  // Agar so‘z topilmasa — harflar (alphabet) dan qidiramiz
+  const matchHarf = alphabet.find(item =>
+    item.uz.toLowerCase() === input || item.ko === input
+  );
+
+  if (matchHarf) {
+    const response = `🇰🇷 ${matchHarf.ko}\n🇺🇿 ${matchHarf.uz} (${matchHarf.roman})\nℹ️ ${matchHarf.expl}`;
     ctx.reply(response);
   } else {
-    ctx.reply("❌ Kechirasiz, bu so‘z uchun tarjima topilmadi.");
+    ctx.reply("❌ Kechirasiz, bu so‘z yoki harf topilmadi.");
   }
-
-
-
-
-
-  if (match) {
-    return `🇰🇷 ${match.ko}\n🇺🇿 ${match.uz} (${match.roman})\nℹ️ ${match.expl}`;
-  } else {
-    return "❌ Bu harf topilmadi.";
-  }
-}
+});
 
 // Telegram botni ishga tushurish
 bot.launch();
 console.log('✅ Telegram bot ishga tushdi.');
 
-// Express serverni ishga tushurish
+// Express server
 app.get('/', (req, res) => {
   res.send('🤖 Bot ishlayapti. Telegram orqali yozing.');
 });
