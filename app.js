@@ -30,7 +30,7 @@ bot.on('text', (ctx) => {
   } else {
     ctx.reply("❌ Kechirasiz, bu so‘z uchun tarjima topilmadi.");
   }
-});
+
 
 
 
