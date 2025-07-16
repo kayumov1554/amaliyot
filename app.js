@@ -22,8 +22,7 @@ bot.on('text', (ctx) => {
 
   function findAlphabetInfo(input) {
   const match = alphabet.find(item =>
-    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input
-  );
+    item.uz.toLowerCase() === input.toLowerCase() || item.ko === input);
 
   if (match) {
     const response = `🇺🇿 ${match.uz}\n🇰🇷 ${match.ko} (${match.roman})\nℹ️ ${match.expl}`;
