@@ -98,7 +98,7 @@
             <textarea id="input-comment" placeholder="Комментарии" rows="2"></textarea>
             
             <div style="background:#eafaf1; padding:15px; border-radius:15px; text-align:center; font-weight:bold; margin:10px 0; color:var(--primary); font-size:1.1rem;">
-                Qiymat: <span id="preview-total">0</span> рублей
+                Общего <span id="preview-total">0</span> рублей
             </div>
             
             <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; font-size:1rem; cursor:pointer;">Добавить</button>
@@ -202,7 +202,7 @@
         }
 
         function deleteEntry(cardId, entryId) {
-            if(!confirm("Ushbu yozuv o'chirilsinmi?")) return;
+            if(!confirm("Удалить ?")) return;
             cards = cards.map(card => {
                 if(card.id === cardId) {
                     card.history = card.history.filter(e => e.id !== entryId);
