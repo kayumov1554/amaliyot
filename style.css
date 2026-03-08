@@ -1,0 +1,118 @@
+:root {
+    --primary: #2ecc71;
+    --dark: #2c3e50;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+}
+
+/* Loader */
+#loader {
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    z-index: 1000;
+}
+
+.tkk-text { font-size: 5rem; letter-spacing: 10px; animation: glow 2s infinite; }
+.plants-anim i { font-size: 2rem; margin: 10px; animation: swing 3s infinite ease-in-out; }
+
+@keyframes glow {
+    0%, 100% { text-shadow: 0 0 10px var(--primary); }
+    50% { text-shadow: 0 0 30px #fff; }
+}
+
+@keyframes swing {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(15deg); }
+}
+
+/* App Layout */
+.hidden { display: none; }
+header {
+    background: var(--primary);
+    padding: 20px;
+    color: white;
+    text-align: center;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#add-card-btn {
+    background: white;
+    color: var(--primary);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+/* Card Design */
+#cards-container { padding: 15px; display: grid; gap: 15px; }
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: 0.3s;
+    border-left: 8px solid #ddd;
+}
+
+.card-date { font-size: 0.8rem; color: #888; }
+.card-body { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.card-total { font-size: 1.5rem; font-weight: bold; }
+
+.card-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Dinamik ranglar */
+.level-3000 { border-left-color: #f1c40f; background: #fffdf0; }
+.level-4000 { border-left-color: #e67e22; background: #fff5eb; }
+.level-5000 { border-left-color: #e74c3c; background: #feebeb; }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    align-items: center; justify-content: center;
+    z-index: 1001;
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 400px;
+    padding: 25px;
+    border-radius: 20px;
+}
+
+.input-group { margin-bottom: 15px; }
+input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+
+/* Responsive */
+@media (max-width: 600px) {
+    .tkk-text { font-size: 3rem; }
+    .card-total { font-size: 1.2rem; }
+}
