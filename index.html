@@ -3,9 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK Tiplitsa Control</title>
-    <link rel="stylesheet" href="style.css">
+    <title>TKK Tiplitsa Monitoring</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2ecc71;
+            --dark: #2c3e50;
+            --white: #ffffff;
+            --danger: #e74c3c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            padding-bottom: 50px;
+        }
+
+        /* 1. Loader Animatsiyasi */
+        #loader {
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            z-index: 1000;
+            transition: 0.5s;
+        }
+
+        .tkk-text { font-size: 5rem; letter-spacing: 10px; animation: glow 2s infinite; margin: 0; }
+        .plants-anim i { font-size: 2rem; margin: 10px; animation: swing 3s infinite ease-in-out; }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 10px var(--primary); }
+            50% { text-shadow: 0 0 30px #fff; }
+        }
+
+        @keyframes swing {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(15deg); }
+        }
+
+        /* 2. Asosiy Interfeys */
+        header {
+            background: var(--primary);
+            padding: 25px 20px;
+            color: white;
+            text-align: center;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stats-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
+
+        #monthly-total { font-size: 1.5rem; font-weight: bold; display: block; }
+        #current-time { font-size: 0.9rem; opacity: 0.9; margin-bottom: 10px; }
+
+        #add-card-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 3. Card Dizayni */
+        #cards-container { padding: 20px; display: grid; gap: 15px; }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            border-left: 8px solid #ddd;
+            transition: 0.3s;
+        }
+
+        .card-delete-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            color: #ccc;
+            padding: 5px;
+        }
+
+        .card-date { font-size: 0.85rem; color: #7f8c8d; margin-bottom: 5px; }
+        .card-body { display: flex; justify-content: space-between; align-items: center; }
+        .card-total { font-size: 1.4rem; font-weight: bold; color: var(--dark); }
+
+        .card-image { width: 50px; height: 50px; object-fit: contain; }
+
+        /* Dinamik ranglar */
+        .level-3000 { border-left-color: #f1c40f; background: #fffdf0; }
+        .level-4000 { border-left-color: #e67e22; background: #fff5eb; }
+        .level-5000 { border-left-color: #e74c3c; background: #feebeb; }
+
+        /* 4. Modal Oynasi */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            align-items: center; justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 25px;
+            border-radius: 25px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .result-preview {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .history-list {
+            margin-top: 20px;
+            border-top: 2px dashed #eee;
+            padding-top: 15px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .save-btn { flex: 2; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; }
+        .close-btn { flex: 1; background: #eee; border: none; padding: 12px; border-radius: 12px; }
+
+        .hidden { display: none; }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .tkk-text { font-size: 3.5rem; }
+            header h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
 
@@ -22,6 +194,10 @@
     <main id="app" class="hidden">
         <header>
             <h1>TKK Monitoring</h1>
+            <div class="stats-container">
+                <small>Shu oylik umumiy:</small>
+                <span id="monthly-total">0</span> so'm
+            </div>
             <div id="current-time"></div>
             <button id="add-card-btn" onclick="openModal()"><i class="fas fa-plus"></i> Bugungi Card</button>
         </header>
@@ -32,25 +208,216 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h2 id="modal-title">Bugungi ma'lumotlar</h2>
+            <h2 id="modal-title" style="margin-top:0">Ma'lumot qo'shish</h2>
             <div class="input-group">
                 <label>Soni:</label>
-                <input type="number" id="input-count" placeholder="0" oninput="calculatePreview()">
+                <input type="number" id="input-count" placeholder="Masalan: 1500" oninput="calculatePreview()">
             </div>
             <div class="input-group">
                 <label>Koeffitsient:</label>
-                <input type="number" id="input-coeff" placeholder="1.0" step="0.1" oninput="calculatePreview()">
+                <input type="number" id="input-coeff" placeholder="Masalan: 1.5" step="0.1" oninput="calculatePreview()">
             </div>
             <div class="result-preview">
-                Natija: <span id="preview-total">0</span>
+                Qo'shilmoqda: <span id="preview-total">0</span>
             </div>
+            
             <div class="modal-buttons">
                 <button onclick="saveCard()" class="save-btn">Saqlash</button>
                 <button onclick="closeModal()" class="close-btn">Yopish</button>
             </div>
+
+            <div id="history-section" class="history-list">
+                </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // --- JavaScript Qismi ---
+
+        let cards = JSON.parse(localStorage.getItem('tkk_data')) || [];
+        let editingId = null;
+
+        // Sahifa yuklanganda animatsiyani to'xtatish
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('app').classList.remove('hidden');
+                    renderCards();
+                }, 500);
+            }, 2500);
+        });
+
+        // Vaqtni ko'rsatib turish
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('current-time').innerText = now.toLocaleString('uz-UZ');
+        }, 1000);
+
+        function openModal(id = null) {
+            const today = new Date().toLocaleDateString();
+            const exists = cards.find(c => c.date === today);
+
+            // Agar yangi card bo'lsa va bugun uchun allaqachon ochilgan bo'lsa, o'shani ochamiz
+            if (id === null && exists) {
+                editingId = exists.id;
+            } else {
+                editingId = id;
+            }
+
+            document.getElementById('input-count').value = '';
+            document.getElementById('input-coeff').value = '';
+            document.getElementById('modal').style.display = 'flex';
+            
+            renderHistory();
+            calculatePreview();
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            editingId = null;
+        }
+
+        function calculatePreview() {
+            const count = document.getElementById('input-count').value || 0;
+            const coeff = document.getElementById('input-coeff').value || 0;
+            document.getElementById('preview-total').innerText = (count * coeff).toLocaleString();
+        }
+
+        function saveCard() {
+            const count = parseFloat(document.getElementById('input-count').value);
+            const coeff = parseFloat(document.getElementById('input-coeff').value);
+
+            if (isNaN(count) || isNaN(coeff)) {
+                alert("Iltimos, sonlarni to'g'ri kiriting!");
+                return;
+            }
+
+            const val = count * coeff;
+            const historyEntry = { count, coeff, val, time: new Date().toLocaleTimeString() };
+            const today = new Date().toLocaleDateString();
+
+            if (editingId) {
+                // Mavjud cardga qo'shish (To'planib borish mantiqi)
+                cards = cards.map(c => {
+                    if (c.id === editingId) {
+                        const newHistory = [...(c.history || []), historyEntry];
+                        const newTotal = newHistory.reduce((sum, item) => sum + item.val, 0);
+                        return { ...c, history: newHistory, total: newTotal, lastUpdate: new Date().toLocaleTimeString() };
+                    }
+                    return c;
+                });
+            } else {
+                // Yangi kun uchun birinchi card
+                const newCard = {
+                    id: Date.now(),
+                    date: today,
+                    total: val,
+                    history: [historyEntry],
+                    lastUpdate: new Date().toLocaleTimeString()
+                };
+                cards.push(newCard);
+            }
+
+            localStorage.setItem('tkk_data', JSON.stringify(cards));
+            renderCards();
+            closeModal();
+        }
+
+        function renderHistory() {
+            const historySection = document.getElementById('history-section');
+            const card = cards.find(c => c.id === editingId);
+            
+            if (card && card.history && card.history.length > 0) {
+                let html = '<strong>Bugungi amallar:</strong>';
+                card.history.forEach((item, index) => {
+                    html += `
+                        <div class="history-item">
+                            <span>${item.count} x ${item.coeff} = <b>${item.val.toLocaleString()}</b></span>
+                            <i class="fas fa-trash-alt" style="color:#e74c3c" onclick="deleteHistoryItem(${card.id}, ${index})"></i>
+                        </div>`;
+                });
+                historySection.innerHTML = html;
+            } else {
+                historySection.innerHTML = '<p style="color:#888">Hozircha amallar yo\'q.</p>';
+            }
+        }
+
+        function deleteHistoryItem(cardId, itemIndex) {
+            if (!confirm("Ushbu yozuvni o'chirmoqchimisiz?")) return;
+
+            cards = cards.map(c => {
+                if (c.id === cardId) {
+                    const newHistory = c.history.filter((_, idx) => idx !== itemIndex);
+                    const newTotal = newHistory.reduce((sum, item) => sum + item.val, 0);
+                    return { ...c, history: newHistory, total: newTotal };
+                }
+                return c;
+            });
+
+            localStorage.setItem('tkk_data', JSON.stringify(cards));
+            renderCards();
+            renderHistory();
+        }
+
+        function deleteWholeCard(id) {
+            if (!confirm("Diqqat! Ushbu kungi barcha ma'lumotlar butunlay o'chiriladi. Rozimisiz?")) return;
+            cards = cards.filter(c => c.id !== id);
+            localStorage.setItem('tkk_data', JSON.stringify(cards));
+            renderCards();
+        }
+
+        function renderCards() {
+            const container = document.getElementById('cards-container');
+            const monthlyText = document.getElementById('monthly-total');
+            container.innerHTML = '';
+
+            // Oylik umumiy hisobni chiqarish
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+            const monthlyTotal = cards.reduce((sum, c) => {
+                const cardDate = new Date(c.id);
+                if (cardDate.getMonth() === currentMonth && cardDate.getFullYear() === currentYear) {
+                    return sum + c.total;
+                }
+                return sum;
+            }, 0);
+            monthlyText.innerText = monthlyTotal.toLocaleString();
+
+            // Cardlarni ekranga chiqarish (yangisi tepada)
+            cards.sort((a, b) => b.id - a.id).forEach(card => {
+                let levelClass = '';
+                let imgUrl = 'https://cdn-icons-png.flaticon.com/512/628/628283.png';
+
+                if (card.total >= 5000) {
+                    levelClass = 'level-5000';
+                    imgUrl = 'https://cdn-icons-png.flaticon.com/512/1047/1047464.png';
+                } else if (card.total >= 4000) {
+                    levelClass = 'level-4000';
+                    imgUrl = 'https://cdn-icons-png.flaticon.com/512/892/892926.png';
+                } else if (card.total >= 3000) {
+                    levelClass = 'level-3000';
+                    imgUrl = 'https://cdn-icons-png.flaticon.com/512/427/427112.png';
+                }
+
+                container.innerHTML += `
+                    <div class="card ${levelClass}">
+                        <i class="fas fa-trash-alt card-delete-icon" onclick="deleteWholeCard(${card.id})"></i>
+                        <div onclick="openModal(${card.id})">
+                            <div class="card-date">${card.date}</div>
+                            <div class="card-body">
+                                <div>
+                                    <div class="card-total">${card.total.toLocaleString()} so'm</div>
+                                    <small>Oxirgi yangilanish: ${card.lastUpdate || '---'}</small>
+                                </div>
+                                <img src="${imgUrl}" class="card-image">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    </script>
 </body>
 </html>
