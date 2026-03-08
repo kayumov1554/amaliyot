@@ -93,16 +93,16 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <h3 id="modal-title" style="margin-top:0; color:var(--dark);">Добавить</h3>
-            <input type="number" id="input-count" placeholder="(Количество)" oninput="calc()">
+            <input type="number" id="input-count" placeholder="Количество" oninput="calc()">
             <input type="number" id="input-coeff" placeholder="Коэффициент" step="0.1" oninput="calc()">
-            <textarea id="input-comment" placeholder="Izoh (Комментарии)" rows="2"></textarea>
+            <textarea id="input-comment" placeholder="Комментарии" rows="2"></textarea>
             
             <div style="background:#eafaf1; padding:15px; border-radius:15px; text-align:center; font-weight:bold; margin:10px 0; color:var(--primary); font-size:1.1rem;">
                 Qiymat: <span id="preview-total">0</span> рублей
             </div>
             
-            <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; font-size:1rem; cursor:pointer;">Saqlash</button>
-            <button onclick="closeModal()" style="width:100%; background:#f1f2f6; border:none; padding:12px; border-radius:15px; margin-top:10px; cursor:pointer;">Yopish</button>
+            <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:15px; border-radius:15px; font-weight:bold; font-size:1rem; cursor:pointer;">Добавить</button>
+            <button onclick="closeModal()" style="width:100%; background:#f1f2f6; border:none; padding:12px; border-radius:15px; margin-top:10px; cursor:pointer;">Назад</button>
             
             <div id="history-list" style="margin-top:25px"></div>
         </div>
@@ -122,7 +122,7 @@
                     checkMonthTransition();
                     renderAll();
                 }, 600);
-            }, 2500); // 2.5 sekund ko'rinib turadi
+            }, 3500); // 2.5 sekund ko'rinib turadi
         };
 
         // 2. Bir kunda bir card mantiqi
@@ -132,11 +132,11 @@
 
             if (id === null) {
                 editingCardId = existingCard ? existingCard.id : null;
-                document.getElementById('modal-title').innerText = existingCard ? "Bugunga ma'lumot qo'shish" : "Yangi kun cardini ochish";
+                document.getElementById('modal-title').innerText = existingCard ? "Сегодняшний" : "Новая Карта";
             } else {
                 editingCardId = id;
                 const c = cards.find(x => x.id === id);
-                document.getElementById('modal-title').innerText = c.date + " ma'lumotlari";
+                document.getElementById('modal-title').innerText = c.date + "информации";
             }
 
             // Inputlarni tozalash
@@ -165,7 +165,7 @@
             const k = parseFloat(document.getElementById('input-coeff').value);
             const comment = document.getElementById('input-comment').value || "Izoh yo'q";
             
-            if(!c || !k) return alert("Iltimos, barcha sonlarni kiriting!");
+            if(!c || !k) return alert("Пожалуйста посмотрите на данные");
 
             const val = c * k;
             const newEntry = { id: Date.now(), c, k, val, comment };
@@ -232,20 +232,20 @@
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center">
                             <div>
-                                <div class="card-val">${card.total.toLocaleString()} so'm</div>
+                                <div class="card-val">${card.total.toLocaleString()} рублей</div>
                                 <small>${card.history.length} ta yozuv kiritilgan</small>
                             </div>
                             <div style="font-size: 32px">${card.total >= 5000 ? '🌳' : card.total >= 3000 ? '🌿' : '🌱'}</div>
                         </div>
                     </div>`;
             });
-            document.getElementById('monthly-total').innerText = monthTotal.toLocaleString() + " so'm";
+            document.getElementById('monthly-total').innerText = monthTotal.toLocaleString() + "рублей";
         }
 
         function renderHistory() {
             const list = document.getElementById('history-list');
             const card = cards.find(c => c.id === editingCardId);
-            list.innerHTML = card ? '<b style="color:var(--dark)">Kiritishlar tarixi:</b>' : '';
+            list.innerHTML = card ? '<b style="color:var(--dark)">История</b>' : '';
             if(card) {
                 card.history.slice().reverse().forEach(h => {
                     list.innerHTML += `
@@ -261,7 +261,7 @@
         }
 
         function deleteCard(id) {
-            if(confirm("Butun bir kunlik barcha ma'lumotlarni o'chirib tashlaysizmi?")) {
+            if(confirm("Удалить все данные сегодняшний?")) {
                 cards = cards.filter(c => c.id !== id);
                 localStorage.setItem('tkk_data', JSON.stringify(cards));
                 renderAll();
@@ -299,10 +299,10 @@
             container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Arxivda hozircha oylik hisobotlar yo\'q.</p>';
             archives.reverse().forEach(arc => {
                 container.innerHTML += `<div class="card" style="border-left:8px solid var(--accent)">
-                    <small style="color:#7f8c8d">OYLIK HISOBOT</small>
+                    <small style="color:#7f8c8d">Месячный Доход</small>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                         <b style="font-size:1.1rem">${arc.monthName}</b>
-                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} so'm</b>
+                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} рублей</b>
                     </div>
                 </div>`;
             });
