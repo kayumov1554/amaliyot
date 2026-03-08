@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK Tiplitsa PRO v3</title>
+    <title>TKK Tiplitsa Fixed</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; --white: #ffffff; --accent: #3498db; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding-bottom: 80px; }
         
-        #loader { position: fixed; width: 100%; height: 100vh; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); z-index: 3000; transition: 0.5s; }
-        .tkk-text { font-size: 4rem; letter-spacing: 8px; animation: glow 2s infinite; }
-        @keyframes glow { 0%, 100% { text-shadow: 0 0 10px var(--primary); } 50% { text-shadow: 0 0 30px #fff; } }
-
         header { background: var(--primary); padding: 20px; color: white; text-align: center; border-radius: 0 0 25px 25px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .stats-card { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 15px; margin: 10px 0; }
         #monthly-total { font-size: 1.6rem; font-weight: bold; }
@@ -23,7 +19,6 @@
 
         .content-section { padding: 15px; }
         .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; position: relative; border-left: 8px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        
         .level-3000 { border-left-color: #f1c40f; }
         .level-4000 { border-left-color: #e67e22; }
         .level-5000 { border-left-color: #e74c3c; }
@@ -32,25 +27,18 @@
         .card-val { font-size: 1.4rem; font-weight: bold; color: var(--dark); }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: white; width: 92%; max-width: 400px; padding: 25px; border-radius: 25px; max-height: 85vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; width: 92%; max-width: 400px; padding: 25px; border-radius: 25px; max-height: 85vh; overflow-y: auto; }
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 1rem; }
         
-        /* History Item with Delete Button */
         .history-item { background: #f9fbf9; padding: 12px; border-radius: 12px; margin-top: 10px; border: 1px solid #edf2ed; position: relative; }
         .hist-top { display: flex; justify-content: space-between; align-items: center; font-weight: bold; padding-right: 30px; }
-        .hist-comment { color: #576574; font-size: 0.85rem; margin-top: 5px; display: block; border-left: 2px solid var(--primary); padding-left: 8px; }
-        .item-delete-btn { position: absolute; top: 12px; right: 10px; color: #e74c3c; cursor: pointer; font-size: 1.1rem; padding: 5px; }
+        .item-delete-btn { position: absolute; top: 12px; right: 10px; color: #e74c3c; cursor: pointer; font-size: 1.2rem; }
 
         #add-btn-fixed { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4); border: none; z-index: 500; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
-
-    <div id="loader">
-        <h1 class="tkk-text">TKK</h1>
-        <p>Yuklanmoqda...</p>
-    </div>
 
     <header>
         <div class="stats-card">
@@ -75,7 +63,7 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3 style="margin-top:0">Ma'lumot qo'shish</h3>
+            <h3 id="modal-title" style="margin-top:0">Ma'lumot qo'shish</h3>
             <input type="number" id="input-count" placeholder="Soni" oninput="calc()">
             <input type="number" id="input-coeff" placeholder="Koeffitsient" step="0.1" oninput="calc()">
             <textarea id="input-comment" placeholder="Izoh yozing..." rows="2"></textarea>
@@ -93,41 +81,41 @@
 
     <script>
         let cards = JSON.parse(localStorage.getItem('tkk_data')) || [];
-        let editingId = null;
+        let editingCardId = null;
 
         window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
-                checkMonthTransition();
-                renderAll();
-            }, 1000);
+            checkMonthTransition();
+            renderAll();
         };
-
-        function switchTab(tab, btn) {
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('current-section').classList.toggle('hidden', tab !== 'current');
-            document.getElementById('archive-section').classList.toggle('hidden', tab !== 'archive');
-            document.getElementById('add-btn-fixed').classList.toggle('hidden', tab !== 'current');
-            if(tab === 'archive') renderArchive();
-        }
 
         function openModal(id = null) {
             const today = new Date().toLocaleDateString();
-            const exists = cards.find(c => c.date === today);
-            
-            // MUHIM: Har doim modal ochilganda inputlarni tozalash
+            const existingCard = cards.find(c => c.date === today);
+
+            // Agar id berilmagan bo'lsa (Plus bosilganda), bugungi card bormi tekshiramiz
+            if (id === null) {
+                editingCardId = existingCard ? existingCard.id : null;
+                document.getElementById('modal-title').innerText = existingCard ? "Bugungi ma'lumotni to'ldirish" : "Yangi kunni boshlash";
+            } else {
+                editingCardId = id;
+                const c = cards.find(x => x.id === id);
+                document.getElementById('modal-title').innerText = c.date + " ma'lumotlari";
+            }
+
+            // Inputlarni har doim tozalash
             document.getElementById('input-count').value = '';
             document.getElementById('input-coeff').value = '';
             document.getElementById('input-comment').value = '';
             document.getElementById('preview-total').innerText = '0';
 
-            editingId = id || (exists ? exists.id : null);
             document.getElementById('modal').style.display = 'flex';
             renderHistory();
         }
 
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            editingCardId = null;
+        }
 
         function calc() {
             const c = document.getElementById('input-count').value || 0;
@@ -139,30 +127,47 @@
             const c = parseFloat(document.getElementById('input-count').value);
             const k = parseFloat(document.getElementById('input-coeff').value);
             const comment = document.getElementById('input-comment').value || "Izoh yo'q";
+            
             if(!c || !k) return alert("Soni va koeffitsientni kiriting!");
 
             const val = c * k;
-            const entry = { id: Date.now(), c, k, val, comment }; // Har bir entryga unikal ID berdik
+            const newEntry = { id: Date.now(), c, k, val, comment };
             const today = new Date().toLocaleDateString();
 
-            if(editingId) {
+            if (editingCardId) {
+                // Mavjud cardga qo'shish
                 cards = cards.map(card => {
-                    if(card.id === editingId) {
-                        card.history.push(entry);
+                    if (card.id === editingCardId) {
+                        card.history.push(newEntry);
                         card.total = card.history.reduce((s, item) => s + item.val, 0);
                     }
                     return card;
                 });
             } else {
-                cards.push({ id: Date.now(), date: today, total: val, history: [entry] });
+                // Yangi card yaratish (faqat bir kunda bir marta)
+                const newCard = {
+                    id: Date.now(),
+                    date: today,
+                    total: val,
+                    history: [newEntry]
+                };
+                cards.push(newCard);
+                editingCardId = newCard.id; // Keyingi qo'shishlar shu cardga tushishi uchun
             }
-            saveData();
+
+            localStorage.setItem('tkk_data', JSON.stringify(cards));
+            renderAll();
+            renderHistory(); // Tarixni yangilash, lekin modalni yopmaslik (ko'proq qo'shish uchun)
+            
+            // Inputlarni tozalash keyingi kiritish uchun
+            document.getElementById('input-count').value = '';
+            document.getElementById('input-coeff').value = '';
+            document.getElementById('input-comment').value = '';
+            document.getElementById('preview-total').innerText = '0';
         }
 
-        // ALOHIDA ELEMENTNI O'CHIRISH FUNKSIYASI
         function deleteEntry(cardId, entryId) {
-            if(!confirm("Ushbu yozuvni o'chirishni istaysizmi?")) return;
-            
+            if(!confirm("Ushbu yozuv o'chirilsinmi?")) return;
             cards = cards.map(card => {
                 if(card.id === cardId) {
                     card.history = card.history.filter(e => e.id !== entryId);
@@ -170,33 +175,19 @@
                 }
                 return card;
             });
-
-            // Agar cardda hech narsa qolmasa, cardni o'chirib yuboramiz
             cards = cards.filter(card => card.history.length > 0);
-            
-            saveData();
-            renderHistory();
-        }
-
-        function deleteCard(id) {
-            if(confirm("Butun kunni o'chirishni istaysizmi?")) {
-                cards = cards.filter(c => c.id !== id);
-                saveData();
-            }
-        }
-
-        function saveData() {
             localStorage.setItem('tkk_data', JSON.stringify(cards));
             renderAll();
+            renderHistory();
         }
 
         function renderAll() {
             const container = document.getElementById('cards-container');
             container.innerHTML = '';
-            let total = 0;
+            let monthTotal = 0;
 
             cards.sort((a,b) => b.id - a.id).forEach(card => {
-                total += card.total;
+                monthTotal += card.total;
                 let lvl = card.total >= 5000 ? 'level-5000' : card.total >= 4000 ? 'level-4000' : card.total >= 3000 ? 'level-3000' : '';
                 container.innerHTML += `
                     <div class="card ${lvl}" onclick="openModal(${card.id})">
@@ -207,51 +198,65 @@
                         <div style="display:flex; justify-content:space-between; align-items:center">
                             <div>
                                 <div class="card-val">${card.total.toLocaleString()} so'm</div>
-                                <small style="color:#7f8c8d">${card.history.length} ta amal</small>
+                                <small>${card.history.length} ta yozuv</small>
                             </div>
                             <div style="font-size: 28px">${card.total >= 5000 ? '🌳' : '🌱'}</div>
                         </div>
                     </div>`;
             });
-            document.getElementById('monthly-total').innerText = total.toLocaleString() + " so'm";
+            document.getElementById('monthly-total').innerText = monthTotal.toLocaleString() + " so'm";
         }
 
         function renderHistory() {
             const list = document.getElementById('history-list');
-            const card = cards.find(c => c.id === editingId);
-            list.innerHTML = card ? '<b style="color:var(--dark)">Tarix:</b>' : '';
+            const card = cards.find(c => c.id === editingCardId);
+            list.innerHTML = card ? '<b>Kiritilganlar:</b>' : '';
             if(card) {
                 card.history.slice().reverse().forEach(h => {
                     list.innerHTML += `
                         <div class="history-item">
                             <div class="hist-top">
                                 <span>${h.c} x ${h.k} = ${h.val.toLocaleString()}</span>
-                                <i class="fas fa-times-circle item-delete-btn" onclick="deleteEntry(${card.id}, ${h.id})"></i>
+                                <i class="fas fa-times item-delete-btn" onclick="deleteEntry(${card.id}, ${h.id})"></i>
                             </div>
-                            <span class="hist-comment">${h.comment}</span>
+                            <div style="font-size:0.8rem; color:#888; margin-top:5px; border-left:2px solid var(--primary); padding-left:5px">${h.comment}</div>
                         </div>`;
                 });
             }
         }
 
-        function checkMonthTransition() {
-            const now = new Date();
-            const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
-            const lastMonthKey = localStorage.getItem('tkk_last_month');
-            if (lastMonthKey && lastMonthKey !== currentMonthKey) archiveCurrentMonth(lastMonthKey);
-            localStorage.setItem('tkk_last_month', currentMonthKey);
+        function deleteCard(id) {
+            if(confirm("Kunni o'chirish?")) {
+                cards = cards.filter(c => c.id !== id);
+                localStorage.setItem('tkk_data', JSON.stringify(cards));
+                renderAll();
+            }
         }
 
-        function archiveCurrentMonth(monthKey) {
-            let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-            const currentData = JSON.parse(localStorage.getItem('tkk_data')) || [];
-            if (currentData.length > 0) {
-                const total = currentData.reduce((s, c) => s + c.total, 0);
-                archives.push({ id: Date.now(), monthName: monthKey, total });
-                localStorage.setItem('tkk_archives', JSON.stringify(archives));
-                localStorage.setItem('tkk_data', JSON.stringify([]));
-                cards = [];
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('current-section').classList.toggle('hidden', tab !== 'current');
+            document.getElementById('archive-section').classList.toggle('hidden', tab !== 'archive');
+            document.getElementById('add-btn-fixed').classList.toggle('hidden', tab !== 'current');
+            if(tab === 'archive') renderArchive();
+        }
+
+        function checkMonthTransition() {
+            const now = new Date();
+            const key = `${now.getFullYear()}-${now.getMonth()}`;
+            const lastKey = localStorage.getItem('tkk_last_month');
+            if (lastKey && lastKey !== key) {
+                let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
+                const currentData = JSON.parse(localStorage.getItem('tkk_data')) || [];
+                if (currentData.length > 0) {
+                    archives.push({ id: Date.now(), monthName: lastKey, total: currentData.reduce((s, c) => s + c.total, 0) });
+                    localStorage.setItem('tkk_archives', JSON.stringify(archives));
+                    localStorage.setItem('tkk_data', "[]");
+                    cards = [];
+                }
             }
+            localStorage.setItem('tkk_last_month', key);
         }
 
         function renderArchive() {
