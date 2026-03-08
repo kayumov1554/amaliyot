@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKK Tiplitsa PRO + Izoh</title>
+    <title>TKK Tiplitsa PRO v3</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #2ecc71; --dark: #2c3e50; --white: #ffffff; --accent: #3498db; }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; padding-bottom: 80px; }
         
-        /* Loader */
         #loader { position: fixed; width: 100%; height: 100vh; background: var(--dark); display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--primary); z-index: 3000; transition: 0.5s; }
         .tkk-text { font-size: 4rem; letter-spacing: 8px; animation: glow 2s infinite; }
         @keyframes glow { 0%, 100% { text-shadow: 0 0 10px var(--primary); } 50% { text-shadow: 0 0 30px #fff; } }
 
-        /* Header */
         header { background: var(--primary); padding: 20px; color: white; text-align: center; border-radius: 0 0 25px 25px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .stats-card { background: rgba(255,255,255,0.2); padding: 12px; border-radius: 15px; margin: 10px 0; }
         #monthly-total { font-size: 1.6rem; font-weight: bold; }
@@ -23,10 +21,8 @@
         .nav-btn { background: rgba(255,255,255,0.3); border: none; padding: 8px 20px; border-radius: 20px; color: white; font-weight: bold; cursor: pointer; }
         .nav-btn.active { background: white; color: var(--primary); }
 
-        /* Cards */
         .content-section { padding: 15px; }
-        .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; position: relative; border-left: 8px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); animation: slideUp 0.4s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; position: relative; border-left: 8px solid #ccc; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
         .level-3000 { border-left-color: #f1c40f; }
         .level-4000 { border-left-color: #e67e22; }
@@ -34,20 +30,18 @@
         
         .card-header { display: flex; justify-content: space-between; color: #7f8c8d; font-size: 0.85rem; margin-bottom: 8px; }
         .card-val { font-size: 1.4rem; font-weight: bold; color: var(--dark); }
-        .card-main { display: flex; justify-content: space-between; align-items: center; }
 
-        /* Modal & Inputs */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); align-items: center; justify-content: center; z-index: 2000; }
-        .modal-content { background: white; width: 92%; max-width: 400px; padding: 25px; border-radius: 25px; max-height: 85vh; overflow-y: auto; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 1rem; font-family: inherit; }
+        .modal-content { background: white; width: 92%; max-width: 400px; padding: 25px; border-radius: 25px; max-height: 85vh; overflow-y: auto; position: relative; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; box-sizing: border-box; font-size: 1rem; }
         
-        /* History with Comments */
-        .history-item { background: #f9fbf9; padding: 12px; border-radius: 10px; margin-top: 10px; border-bottom: 2px solid #edf2ed; }
-        .hist-top { display: flex; justify-content: space-between; font-weight: bold; }
-        .hist-comment { color: #576574; font-size: 0.9rem; margin-top: 4px; font-style: italic; display: block; border-left: 2px solid var(--primary); padding-left: 8px; }
+        /* History Item with Delete Button */
+        .history-item { background: #f9fbf9; padding: 12px; border-radius: 12px; margin-top: 10px; border: 1px solid #edf2ed; position: relative; }
+        .hist-top { display: flex; justify-content: space-between; align-items: center; font-weight: bold; padding-right: 30px; }
+        .hist-comment { color: #576574; font-size: 0.85rem; margin-top: 5px; display: block; border-left: 2px solid var(--primary); padding-left: 8px; }
+        .item-delete-btn { position: absolute; top: 12px; right: 10px; color: #e74c3c; cursor: pointer; font-size: 1.1rem; padding: 5px; }
 
-        .archive-item { background: #fff; padding: 18px; border-radius: 15px; margin-bottom: 12px; border-left: 5px solid var(--accent); box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        #add-btn-fixed { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4); border: none; z-index: 500; cursor: pointer; }
+        #add-btn-fixed { position: fixed; bottom: 25px; right: 25px; background: var(--primary); color: white; width: 65px; height: 65px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4); border: none; z-index: 500; }
         .hidden { display: none; }
     </style>
 </head>
@@ -55,12 +49,12 @@
 
     <div id="loader">
         <h1 class="tkk-text">TKK</h1>
-        <p>Tiplitsa Monitoring...</p>
+        <p>Yuklanmoqda...</p>
     </div>
 
     <header>
         <div class="stats-card">
-            <small id="month-label">Joriy Oylik Hisob</small>
+            <small>Shu oylik umumiy natija</small>
             <div id="monthly-total">0 so'm</div>
         </div>
         <div class="nav-tabs">
@@ -81,17 +75,17 @@
 
     <div id="modal" class="modal">
         <div class="modal-content">
-            <h3 id="modal-date" style="margin-top:0; color:var(--dark)">Ma'lumot Qo'shish</h3>
-            <input type="number" id="input-count" placeholder="Soni (masalan: 1000)" oninput="calc()">
-            <input type="number" id="input-coeff" placeholder="Koeffitsient (masalan: 1.5)" step="0.1" oninput="calc()">
-            <textarea id="input-comment" placeholder="Izoh (masalan: Pomidor o'g'iti)" rows="2"></textarea>
+            <h3 style="margin-top:0">Ma'lumot qo'shish</h3>
+            <input type="number" id="input-count" placeholder="Soni" oninput="calc()">
+            <input type="number" id="input-coeff" placeholder="Koeffitsient" step="0.1" oninput="calc()">
+            <textarea id="input-comment" placeholder="Izoh yozing..." rows="2"></textarea>
             
             <div style="background:#eafaf1; padding:12px; border-radius:12px; text-align:center; font-weight:bold; margin:10px 0; color:var(--primary)">
                 Jami: <span id="preview-total">0</span> so'm
             </div>
             
-            <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:12px; font-weight:bold; font-size:1rem; cursor:pointer">Saqlash</button>
-            <button onclick="closeModal()" style="width:100%; background:#f1f2f6; border:none; padding:12px; border-radius:12px; margin-top:10px; cursor:pointer">Yopish</button>
+            <button onclick="saveEntry()" style="width:100%; background:var(--primary); color:white; border:none; padding:14px; border-radius:12px; font-weight:bold; font-size:1rem;">Saqlash</button>
+            <button onclick="closeModal()" style="width:100%; background:#f1f2f6; border:none; padding:12px; border-radius:12px; margin-top:10px;">Yopish</button>
             
             <div id="history-list" style="margin-top:25px"></div>
         </div>
@@ -103,37 +97,11 @@
 
         window.onload = () => {
             setTimeout(() => {
-                document.getElementById('loader').style.opacity = '0';
-                setTimeout(() => document.getElementById('loader').style.display = 'none', 500);
+                document.getElementById('loader').style.display = 'none';
                 checkMonthTransition();
                 renderAll();
-            }, 1500);
+            }, 1000);
         };
-
-        function checkMonthTransition() {
-            const now = new Date();
-            const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
-            const lastMonthKey = localStorage.getItem('tkk_last_month');
-
-            if (lastMonthKey && lastMonthKey !== currentMonthKey) {
-                archiveCurrentMonth(lastMonthKey);
-            }
-            localStorage.setItem('tkk_last_month', currentMonthKey);
-        }
-
-        function archiveCurrentMonth(monthKey) {
-            let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-            const currentData = JSON.parse(localStorage.getItem('tkk_data')) || [];
-            if (currentData.length > 0) {
-                const total = currentData.reduce((s, c) => s + c.total, 0);
-                const [year, month] = monthKey.split('-');
-                const monthName = new Date(year, month).toLocaleString('uz-UZ', { month: 'long' });
-                archives.push({ id: Date.now(), monthName: monthName.toUpperCase() + " " + year, total, details: currentData });
-                localStorage.setItem('tkk_archives', JSON.stringify(archives));
-                localStorage.setItem('tkk_data', JSON.stringify([]));
-                cards = [];
-            }
-        }
 
         function switchTab(tab, btn) {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -147,14 +115,16 @@
         function openModal(id = null) {
             const today = new Date().toLocaleDateString();
             const exists = cards.find(c => c.date === today);
-            editingId = id || (exists ? exists.id : null);
             
+            // MUHIM: Har doim modal ochilganda inputlarni tozalash
             document.getElementById('input-count').value = '';
             document.getElementById('input-coeff').value = '';
             document.getElementById('input-comment').value = '';
+            document.getElementById('preview-total').innerText = '0';
+
+            editingId = id || (exists ? exists.id : null);
             document.getElementById('modal').style.display = 'flex';
             renderHistory();
-            calc();
         }
 
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
@@ -169,10 +139,10 @@
             const c = parseFloat(document.getElementById('input-count').value);
             const k = parseFloat(document.getElementById('input-coeff').value);
             const comment = document.getElementById('input-comment').value || "Izoh yo'q";
-            if(!c || !k) { alert("Soni va koeffitsientni kiriting!"); return; }
+            if(!c || !k) return alert("Soni va koeffitsientni kiriting!");
 
             const val = c * k;
-            const entry = { c, k, val, comment, time: new Date().toLocaleTimeString() };
+            const entry = { id: Date.now(), c, k, val, comment }; // Har bir entryga unikal ID berdik
             const today = new Date().toLocaleDateString();
 
             if(editingId) {
@@ -186,9 +156,38 @@
             } else {
                 cards.push({ id: Date.now(), date: today, total: val, history: [entry] });
             }
+            saveData();
+        }
+
+        // ALOHIDA ELEMENTNI O'CHIRISH FUNKSIYASI
+        function deleteEntry(cardId, entryId) {
+            if(!confirm("Ushbu yozuvni o'chirishni istaysizmi?")) return;
+            
+            cards = cards.map(card => {
+                if(card.id === cardId) {
+                    card.history = card.history.filter(e => e.id !== entryId);
+                    card.total = card.history.reduce((s, item) => s + item.val, 0);
+                }
+                return card;
+            });
+
+            // Agar cardda hech narsa qolmasa, cardni o'chirib yuboramiz
+            cards = cards.filter(card => card.history.length > 0);
+            
+            saveData();
+            renderHistory();
+        }
+
+        function deleteCard(id) {
+            if(confirm("Butun kunni o'chirishni istaysizmi?")) {
+                cards = cards.filter(c => c.id !== id);
+                saveData();
+            }
+        }
+
+        function saveData() {
             localStorage.setItem('tkk_data', JSON.stringify(cards));
             renderAll();
-            closeModal();
         }
 
         function renderAll() {
@@ -199,20 +198,18 @@
             cards.sort((a,b) => b.id - a.id).forEach(card => {
                 total += card.total;
                 let lvl = card.total >= 5000 ? 'level-5000' : card.total >= 4000 ? 'level-4000' : card.total >= 3000 ? 'level-3000' : '';
-                let emoji = card.total >= 5000 ? '🌳' : card.total >= 3000 ? '🌿' : '🌱';
-
                 container.innerHTML += `
                     <div class="card ${lvl}" onclick="openModal(${card.id})">
                         <div class="card-header">
                             <span><i class="far fa-calendar-alt"></i> ${card.date}</span>
                             <i class="fas fa-trash-alt" style="color:#d1d8e0" onclick="event.stopPropagation(); deleteCard(${card.id})"></i>
                         </div>
-                        <div class="card-main">
+                        <div style="display:flex; justify-content:space-between; align-items:center">
                             <div>
                                 <div class="card-val">${card.total.toLocaleString()} so'm</div>
-                                <small style="color:#7f8c8d">${card.history.length} ta yozuv kiritilgan</small>
+                                <small style="color:#7f8c8d">${card.history.length} ta amal</small>
                             </div>
-                            <div style="font-size: 32px">${emoji}</div>
+                            <div style="font-size: 28px">${card.total >= 5000 ? '🌳' : '🌱'}</div>
                         </div>
                     </div>`;
             });
@@ -222,14 +219,14 @@
         function renderHistory() {
             const list = document.getElementById('history-list');
             const card = cards.find(c => c.id === editingId);
-            list.innerHTML = card ? '<b style="color:var(--dark)">Kiritishlar tarixi:</b>' : '';
+            list.innerHTML = card ? '<b style="color:var(--dark)">Tarix:</b>' : '';
             if(card) {
-                card.history.slice().reverse().forEach((h, i) => {
+                card.history.slice().reverse().forEach(h => {
                     list.innerHTML += `
                         <div class="history-item">
                             <div class="hist-top">
-                                <span>${h.c} x ${h.k}</span>
-                                <span style="color:var(--primary)">${h.val.toLocaleString()}</span>
+                                <span>${h.c} x ${h.k} = ${h.val.toLocaleString()}</span>
+                                <i class="fas fa-times-circle item-delete-btn" onclick="deleteEntry(${card.id}, ${h.id})"></i>
                             </div>
                             <span class="hist-comment">${h.comment}</span>
                         </div>`;
@@ -237,30 +234,33 @@
             }
         }
 
+        function checkMonthTransition() {
+            const now = new Date();
+            const currentMonthKey = `${now.getFullYear()}-${now.getMonth()}`;
+            const lastMonthKey = localStorage.getItem('tkk_last_month');
+            if (lastMonthKey && lastMonthKey !== currentMonthKey) archiveCurrentMonth(lastMonthKey);
+            localStorage.setItem('tkk_last_month', currentMonthKey);
+        }
+
+        function archiveCurrentMonth(monthKey) {
+            let archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
+            const currentData = JSON.parse(localStorage.getItem('tkk_data')) || [];
+            if (currentData.length > 0) {
+                const total = currentData.reduce((s, c) => s + c.total, 0);
+                archives.push({ id: Date.now(), monthName: monthKey, total });
+                localStorage.setItem('tkk_archives', JSON.stringify(archives));
+                localStorage.setItem('tkk_data', JSON.stringify([]));
+                cards = [];
+            }
+        }
+
         function renderArchive() {
             const container = document.getElementById('archive-container');
             const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-            container.innerHTML = archives.length ? '' : '<div style="text-align:center; color:#7f8c8d; margin-top:20px;">Arxiv hali bo\'sh</div>';
+            container.innerHTML = archives.length ? '' : '<p style="text-align:center">Arxiv bo\'sh</p>';
             archives.reverse().forEach(arc => {
-                container.innerHTML += `
-                    <div class="archive-item">
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                            <div>
-                                <small style="color:#7f8c8d">OYLIK NATIJA</small>
-                                <div style="font-weight:bold; font-size:1.1rem">${arc.monthName}</div>
-                            </div>
-                            <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} so'm</b>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div class="card" style="border-left:6px solid var(--accent)"><b>${arc.monthName}</b>: ${arc.total.toLocaleString()} so'm</div>`;
             });
-        }
-
-        function deleteCard(id) {
-            if(confirm("Ushbu kungi barcha ma'lumotlarni o'chirib tashlaysizmi?")) {
-                cards = cards.filter(c => c.id !== id);
-                localStorage.setItem('tkk_data', JSON.stringify(cards));
-                renderAll();
-            }
         }
     </script>
 </body>
