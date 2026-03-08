@@ -136,7 +136,7 @@
             } else {
                 editingCardId = id;
                 const c = cards.find(x => x.id === id);
-                document.getElementById('modal-title').innerText = c.date + "информации";
+                document.getElementById('modal-title').innerText = c.date + " информации";
             }
 
             // Inputlarni tozalash
@@ -163,7 +163,7 @@
         function saveEntry() {
             const c = parseFloat(document.getElementById('input-count').value);
             const k = parseFloat(document.getElementById('input-coeff').value);
-            const comment = document.getElementById('input-comment').value || "Izoh yo'q";
+            const comment = document.getElementById('input-comment').value || "Нет комментарии";
             
             if(!c || !k) return alert("Пожалуйста посмотрите на данные");
 
@@ -232,14 +232,14 @@
                         </div>
                         <div style="display:flex; justify-content:space-between; align-items:center">
                             <div>
-                                <div class="card-val">${card.total.toLocaleString()} рублей</div>
-                                <small>${card.history.length} ta yozuv kiritilgan</small>
+                                <div class="card-val">${card.total.toLocaleString()}  рублей</div>
+                                <small>${card.history.length} Операции</small>
                             </div>
                             <div style="font-size: 32px">${card.total >= 5000 ? '🌳' : card.total >= 3000 ? '🌿' : '🌱'}</div>
                         </div>
                     </div>`;
             });
-            document.getElementById('monthly-total').innerText = monthTotal.toLocaleString() + "рублей";
+            document.getElementById('monthly-total').innerText = monthTotal.toLocaleString() + " рублей";
         }
 
         function renderHistory() {
@@ -296,13 +296,13 @@
         function renderArchive() {
             const container = document.getElementById('archive-container');
             const archives = JSON.parse(localStorage.getItem('tkk_archives')) || [];
-            container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Arxivda hozircha oylik hisobotlar yo\'q.</p>';
+            container.innerHTML = archives.length ? '' : '<p style="text-align:center; color:#999; margin-top:50px;">Архив пусто</p>';
             archives.reverse().forEach(arc => {
                 container.innerHTML += `<div class="card" style="border-left:8px solid var(--accent)">
                     <small style="color:#7f8c8d">Месячный Доход</small>
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
                         <b style="font-size:1.1rem">${arc.monthName}</b>
-                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()} рублей</b>
+                        <b style="color:var(--accent); font-size:1.2rem">${arc.total.toLocaleString()}  рублей</b>
                     </div>
                 </div>`;
             });
